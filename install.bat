@@ -1,5 +1,10 @@
 @echo off
-python -m venv venv
-call .\venv\Scripts\activate.bat
-pip install -r requirements.txt
+mkdir reachable
+mkdir not_reachable
+call python -m venv venv
+call activate_environment.bat
+REM call pip install -r requirements.txt
+if not exist settings.ini (
+    copy settings_example.ini settings.ini
+)
 pause
