@@ -15,11 +15,15 @@ The application only executes batch files when there's a state change, preventin
 
 1. Ensure Python 3.6+ is installed on your system
 2. Clone or download this repository
-3. Configure the `settings.ini` file with your desired parameters
-4. Place your batch files in the appropriate folders:
+3. Install required dependencies:
+    ```
+    pip install ping3
+    ```
+4. Configure the `settings.ini` file with your desired parameters
+5. Place your batch files in the appropriate folders:
     - `reachable/` - Batch files to execute when the device becomes reachable
     - `not_reachable/` - Batch files to execute when the device becomes unreachable
-5. Run the application with `python main.py`
+6. Run the application with `python main.py`
 
 ## Configuration
 
@@ -38,11 +42,15 @@ ping_limit = 3              # Number of consecutive successful/failed pings requ
 -   **ping_interval**: How often (in seconds) the application should ping the device
 -   **ping_limit**: How many consecutive successful or failed pings are required before executing batch files
 
+## Dependencies
+
+-   **ping3**: A pure Python ping implementation that doesn't require root privileges
+
 ## How It Works
 
 1. The application reads the configuration from `settings.ini`
 2. It enters a continuous loop:
-    - Pings the specified IP address
+    - Pings the specified IP address using the ping3 library
     - Tracks consecutive successful and failed pings
     - When the number of consecutive successful pings reaches the limit, and the previous state was "unreachable" or unknown:
         - Changes the state to "reachable"

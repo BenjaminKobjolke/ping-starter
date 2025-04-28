@@ -10,7 +10,7 @@ import configparser
 import os
 import subprocess
 import time
-import platform
+from ping3 import ping
 from datetime import datetime
 
 def read_settings():
@@ -26,19 +26,15 @@ def read_settings():
     
     return settings
 
-def ping(host):
+def ping_host(host, timeout=1):
     """
     Ping the specified host and return True if reachable, False otherwise.
-    Uses platform-specific ping command.
+    Uses ping3 library for cross-platform compatibility.
     """
-    # Determine the correct ping command based on the operating system
-    param = '-n' if platform.system().lower() == 'windows' else '-c'
-    command = ['ping', param, '1', host]
-    
     try:
-        # Run the ping command and capture the output
-        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        return result.returncode == 0
+        response_time = ping(host, timeout=timeout)
+        # ping() returns None or False on failure, and the response time (float) on success
+        return response_time is not None and response_time != False
     except Exception as e:
         print(f"Error pinging {host}: {e}")
         return False
@@ -93,7 +89,7 @@ def main():
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
         # Ping the IP address
-        is_reachable = ping(ip_address)
+        is_reachable = ping_host(ip_address)
         
         if is_reachable:
             consecutive_success += 1
